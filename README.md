@@ -8,7 +8,7 @@ I'm learning Rust, so really the point here was also for me to learn while doing
 ## Getting started
 To get started with Git Daily Autocommiter, you'll need to set up a few environment variables. Here's what you'll need:
 
-- `GITHUB_API_KEY`: Your GitHub API key for authorization.
+- `PATH_TO_SSH_KEY`: File path to the GitHub ssh key. 
 - `REPO_NAME`: The name of the GitHub repository where you want to push the code.
 - `FILE_BASE_NAME`: The base name of the file you want to read from. The script will concatenate this with the current date to create the actual file name to read from.
 - `USERNAME`: Your GitHub username.
