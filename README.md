@@ -7,11 +7,16 @@ I'm learning Rust, so really the point here was also for me to learn while doing
 
 ## Getting started
 To get started with Git Daily Autocommiter, you'll need to set up a few environment variables. Here's what you'll need:
-
-- `PATH_TO_SSH_KEY`: File path to the GitHub ssh key. 
-- `REPO_NAME`: The name of the GitHub repository where you want to push the code.
+REPO_PATH
+FILE_BASE_NAME
+SSH_PRIVATE_KEY_PATH
+COMMIT_AUTHOR
+COMMIT_EMAIL
+- `SSH_PRIVATE_KEY_PATH`: File path to the GitHub ssh key. 
+- `REPO_PATH`: The path to the GitHub repository where you want to push the code.
 - `FILE_BASE_NAME`: The base name of the file you want to read from. The script will concatenate this with the current date to create the actual file name to read from.
-- `USERNAME`: Your GitHub username.
+- `COMMIT_AUTHOR`: Your GitHub username.
+- `COMMIT_EMAIL`: Your GitHub email.
 
 Once you have these environment variables set up, you can run the script by simply executing `cargo run` in your terminal.
 

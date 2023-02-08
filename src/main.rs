@@ -22,8 +22,12 @@ fn main() {
 
     // create the full file name
     let file_name = format!("{}-{}", day, file_base_name);
+    let file_rel_path = format!("notes/{}", file_name);
+    let file_abs_path = format!("{}{}", repo_name, file_rel_path);
 
     println!("{repo_name}");
+
+    println!("{file_abs_path}");
 
     // open the repository
     let repo = match Repository::open(&repo_name) {
@@ -41,47 +45,36 @@ fn main() {
     push_options.remote_callbacks(callbacks);
 
     // read the file
-    let contents = match fs::read_to_string(&file_name) {
+    let contents = match fs::read_to_string(&file_abs_path) {
         Ok(contents) => contents,
         Err(_) => {
-            let mut full_path_file = repo_name.clone();
-            full_path_file.push_str(&file_name);
-            fs::File::create(full_path_file).expect("File not created!");
+            fs::File::create(&file_abs_path).expect("File not created!");
             String::new()
         }
     };
 
     let signature = Signature::now(&commit_author, &commit_email).expect("Panic!");
     let mut index = repo.index().expect("Panic!");
-    index.add_path(Path::new(&file_name)).expect("Panic!");
+    index.add_path(Path::new(&file_rel_path)).expect("Panic!");
     let tree_id = index.write_tree().expect("Panic!");
     let tree = repo.find_tree(tree_id).expect("Panic!");
 
     let parent_commit = find_last_commit(&repo).expect("No last commit??");
 
-    // if the file is not empty, add, commit and push the changes
-    if !contents.is_empty() {
-        let message = format!("My daily commit - stuff for {}", day);
-        repo.commit(
-            Some("HEAD"), 
-            &signature, 
-            &signature, 
-            &message, 
-            &tree, 
-            &[&parent_commit]
-        ).expect("Panic!");
+    let message = if contents.is_empty() {
+        format!("My daily commit - no recorded stuff for {}", day)
     } else {
-        // let message = format!("My daily commit - no recorded stuff for {}", day);
-        let message = "This is my first test commit";
-        repo.commit(
-            Some("HEAD"),
-            &signature,
-            &signature,
-            &message,
-            &tree,
-            &[&parent_commit]
-        ).expect("Panic!");
-    }
+        format!("My daily commit - stuff for {}", day)
+    };
+   
+    repo.commit(
+        Some("HEAD"), 
+        &signature, 
+        &signature, 
+        &message, 
+        &tree, 
+        &[&parent_commit]
+    ).expect("Panic!");
 
     let mut remote = repo.find_remote("origin").expect("Panic!");
     remote.push(&["refs/heads/develop"], Some(&mut push_options)).expect("Panic!");
